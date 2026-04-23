@@ -1,29 +1,45 @@
-### 🇺🇸 English Version
+driver from sm8750 linux kernel 6.6 to 4.19
 
-# Android Kernel (OPPO sm8250) - Gamepad Driver Backport
+fork by https://github.com/youngguo18/android_kernel_OPPO_sm8250/tree/stock/13.1
 
-This repository is a modified Linux 4.19 kernel for OPPO sm8250 devices. It is forked from [youngguo18/android_kernel_OPPO_sm8250 (stock/13.1)](https://github.com/youngguo18/android_kernel_OPPO_sm8250/tree/stock/13.1).
+edited files
+   modified:   arch/arm64/configs/vendor/kona-perf_defconfig
+   modified:   build.sh
+   modified:   drivers/Kconfig
+   modified:   drivers/hid/hid-microsoft.c
+   modified:   drivers/hid/hid-nintendo.c
+   modified:   drivers/hid/hid-playstation.c   （remove led support）
+   modified:   drivers/hid/hid-sony.c          （ds4 support was moved to hid-playstation.c）
 
-The primary goal of this fork is to **backport modern gamepad drivers** from the Linux 6.6 kernel (sm8750) to this Linux 4.19 kernel, bringing native support for modern controllers like the PS5 DualSense.
+Note: KernelSU code is retained in the source tree, but the compilation options in defconfig have been removed.
 
-## 📝 Key Changes & Modified Files
+tools
+git clone --depth=1 https://github.com/LineageOS/android_prebuilts_clang_kernel_linux-x86_clang-r416183b.git ~/kernel/clang
+git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git ~/kernel/gcc64
+git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git ~/kernel/gcc32
 
-* **`drivers/hid/hid-playstation.c`**: Backported from Linux 6.6 to support PS5 DualSense and PS4 DualShock 4 controllers.
-    * *Note:* The multicolor LED subsystem support was removed/stubbed to maintain compatibility and pass compilation on the 4.19 kernel.
-* **`drivers/hid/hid-sony.c`**: Removed legacy DS4 support (this is now handled entirely by the new `hid-playstation.c` driver to prevent conflicts).
-* **`drivers/hid/hid-microsoft.c` & `drivers/hid/hid-nintendo.c`**: Updated/backported for better Xbox and Nintendo controller support.
-* **`drivers/Kconfig`**: Updated to include the new driver configurations.
-* **`arch/arm64/configs/vendor/kona-perf_defconfig` & `build.sh`**: Build scripts and configurations updated.
+run build.sh
 
-### 🛡️ KernelSU (KSU) Notice
-The original upstream repository had KernelSU built-in and enabled by default. In this fork, **the KSU compilation options have been disabled** in the config. The KSU source code still remains in the directory tree, so you can easily re-enable it in the `defconfig` if needed.
 
-## 🛠️ Toolchain Setup
 
-Before building, clone the required LineageOS prebuilt toolchains into your `~/kernel` directory:
+驱动移植自 sm8750 linux kernel 6.6 到 4.19
 
-```bash
-mkdir -p ~/kernel
-git clone --depth=1 [https://github.com/LineageOS/android_prebuilts_clang_kernel_linux-x86_clang-r416183b.git](https://github.com/LineageOS/android_prebuilts_clang_kernel_linux-x86_clang-r416183b.git) ~/kernel/clang
-git clone --depth=1 [https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git](https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git) ~/kernel/gcc64
-git clone --depth=1 [https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git](https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git) ~/kernel/gcc32
+源码 Fork 自 https://github.com/youngguo18/android_kernel_OPPO_sm8250/tree/stock/13.1
+
+修改的文件：
+   modified:   arch/arm64/configs/vendor/kona-perf_defconfig
+   modified:   build.sh
+   modified:   drivers/Kconfig
+   modified:   drivers/hid/hid-microsoft.c
+   modified:   drivers/hid/hid-nintendo.c
+   modified:   drivers/hid/hid-playstation.c   （移除了 led 支持）
+   modified:   drivers/hid/hid-sony.c          （ds4 的支持已移动到 hid-playstation.c）
+
+注意：KernelSU 代码仍保留在源码树中，但已删除 defconfig 中的编译选项。
+
+编译工具：
+git clone --depth=1 https://github.com/LineageOS/android_prebuilts_clang_kernel_linux-x86_clang-r416183b.git ~/kernel/clang
+git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_aarch64_aarch64-linux-android-4.9.git ~/kernel/gcc64
+git clone --depth=1 https://github.com/LineageOS/android_prebuilts_gcc_linux-x86_arm_arm-linux-androideabi-4.9.git ~/kernel/gcc32
+
+运行 build.sh 即可编译
